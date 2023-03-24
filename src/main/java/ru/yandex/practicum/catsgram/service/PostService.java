@@ -28,8 +28,7 @@ public class PostService {
         throw new PostNotFountException("Пост с номером " + postId + " не найден");
     }
     
-    public List<Post> findAll(Integer size, Integer from, String sort) {
-
+    public List<Post> findAll() {
         return posts;
     }
     public Post create(Post post) {

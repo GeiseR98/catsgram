@@ -10,22 +10,26 @@ import ru.yandex.practicum.catsgram.service.UserService;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/users")
+//@RequestMapping("/users")
 public class UserController {
     private final UserService userService;
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
-    @GetMapping
+    @GetMapping("/users")
     public Collection<User> findAll() {
         return userService.findAll();
     }
+
+
     @GetMapping("/users/{userEmail}")
-    public User findUserByEmail(@PathVariable String userEmail) {
+    public User findUserByEmail(@PathVariable("userEmail") String userEmail) {
         return userService.findUserByEmail(userEmail);
     }
-    @PostMapping
+
+
+    @PostMapping(value = "/users")
     public User create(@RequestBody User user) {
         if(user.getEmail() == null || user.getEmail().isBlank()) {
             throw new InvalidEmailException("Адрес электронной почты не может быть пустым.");
@@ -34,7 +38,7 @@ public class UserController {
             throw new UserAlreadyExistException("Пользователь с электронной почтой " +
                     user.getEmail() + " уже зарегистрирован.");
         }
-        userService.create(user);
+        userService.createUser(user);
         return user;
     }
     @PutMapping
@@ -42,7 +46,7 @@ public class UserController {
         if(user.getEmail() == null || user.getEmail().isBlank()) {
             throw new InvalidEmailException("Адрес электронной почты не может быть пустым.");
         }
-        userService.create(user);
+        userService.updateUser(user);
         return user;
     }
 }
