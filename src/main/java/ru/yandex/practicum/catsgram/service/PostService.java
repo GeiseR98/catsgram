@@ -2,10 +2,9 @@ package ru.yandex.practicum.catsgram.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.catsgram.exception.PostNotFountException;
+import ru.yandex.practicum.catsgram.exception.PostNotFoundException;
 import ru.yandex.practicum.catsgram.exception.UserNotFoundException;
 import ru.yandex.practicum.catsgram.model.Post;
-import ru.yandex.practicum.catsgram.model.User;
 
 
 import java.util.ArrayList;
@@ -23,12 +22,10 @@ public class PostService {
         this.userService = userService;
     }
     public Post findPostById(Integer postId) {
-        for (Post post : posts) {
-            if (post.getId() == postId) {
-                return post;
-            }
-        }
-        throw new PostNotFountException("Пост с номером " + postId + " не найден");
+        return posts.stream()
+                .filter(p -> p.getId().equals(postId))
+                .findFirst()
+                .orElseThrow(() -> new PostNotFoundException(String.format("Пост № %d не найден", postId)));
     }
 
     public List<Post> findAll(Integer size, Integer from, String sort) {
